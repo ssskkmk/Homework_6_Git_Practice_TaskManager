@@ -43,6 +43,7 @@ namespace TaskTracker.UI
                         "Изменить статус задачи",
                         "Удалить задачу",
                         "Статистика",
+                        "Поиск по названию",
                         "Сохранить и выйти"
                     );
                 }
@@ -69,6 +70,9 @@ namespace TaskTracker.UI
                         ShowStatistics();
                         break;
                     case 6:
+                        SearchTasks();
+                        break;
+                    case 7:
                         storage.SaveTasks(taskService.GetAllTasks());
                         running = false;
                         Console.WriteLine("Задачи сохранены. До свидания!");
@@ -86,7 +90,8 @@ namespace TaskTracker.UI
             Console.WriteLine("3. Изменить статус задачи");
             Console.WriteLine("4. Удалить задачу");
             Console.WriteLine("5. Статистика");
-            Console.WriteLine("6. Сохранить и выйти");
+            Console.WriteLine("6. Поиск по названию");
+            Console.WriteLine("7. Сохранить и выйти");
             Console.Write("Выберите действие: ");
 
             string input = Console.ReadLine();
@@ -96,6 +101,40 @@ namespace TaskTracker.UI
                 return result;
             }
             return 0;
+        }
+
+        private void SearchTasks()
+        {
+            Console.WriteLine();
+            Console.Write("Введите часть названия: ");
+            string query = Console.ReadLine();
+
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                Console.WriteLine("Поисковый запрос не должен быть пустым.");
+            }
+            else
+            {
+                List<TaskItem> matches = taskService.FindTasksByTitle(query);
+                if (matches.Count == 0)
+                {
+                    Console.WriteLine("Задачи не найдены.");
+                }
+                else
+                {
+                    Console.WriteLine("--- Результаты поиска ---");
+                    for (int i = 0; i < matches.Count; i++)
+                    {
+                        Console.WriteLine(matches[i].ToString());
+                    }
+                }
+            }
+
+            if (useArrowMenu)
+            {
+                Console.WriteLine("\nНажмите любую клавишу для продолжения...");
+                Console.ReadKey();
+            }
         }
 
         private void ShowStatistics()
