@@ -91,6 +91,25 @@ namespace TaskTracker.Services
             return tasks.Count;
         }
 
+        public List<TaskItem> FindTasksByTitle(string query)
+        {
+            List<TaskItem> result = new List<TaskItem>();
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                return result;
+            }
+
+            query = query.Trim();
+            for (int i = 0; i < tasks.Count; i++)
+            {
+                if (tasks[i].Title.IndexOf(query, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    result.Add(tasks[i]);
+                }
+            }
+            return result;
+        }
+
         public string GetStatistics()
         {
             int total = tasks.Count;
